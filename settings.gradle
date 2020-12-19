@@ -1,0 +1,3 @@
+include ':linearcdividerview'
+include ':app'
+rootProject.name = "LinkedLineArcDividerView"
