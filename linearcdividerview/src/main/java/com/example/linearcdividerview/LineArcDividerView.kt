@@ -29,3 +29,39 @@ val deg : Float = 60f
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
+
+fun Canvas.drawLineArcDivider(scale : Float, w : Float, h : Float, paint : Paint) {
+    val size : Float = Math.min(w, h) / sizeFactor
+    val sc1 : Float = scale.divideScale(0, parts)
+    val sc2 : Float = scale.divideScale(1, parts)
+    val gap : Float = size / arcs
+    save()
+    translate(w / 2, h / 2)
+
+    for (j in 0..1) {
+        save()
+        rotate(deg * (1 - 2 * j))
+        drawLine(0f, -size * sc2, 0f, -size * sc1, paint)
+        restore()
+    }
+
+    for (j in 0..(parts - 1)) {
+        val sc1j : Float = sc1.divideScale(j, parts)
+        val sc2j : Float = sc2.divideScale(j, parts)
+        val r : Float = j * gap
+        save()
+        drawArc(RectF(-r, -r, r, r), 270f - deg + 2 * deg * sc2j, 2 * deg * (sc1j - sc2j), false, paint)
+        restore()
+    }
+    restore()
+}
+
+fun Canvas.drawLADNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.style = Paint.Style.STROKE
+    drawLineArcDivider(scale, w, h, paint)
+}
