@@ -20,7 +20,7 @@ val colors : Array<Int> = arrayOf(
 }.toTypedArray()
 val parts : Int = 2
 val arcs : Int = 4
-val scGap : Float = 0.02f / (parts + 1)
+val scGap : Float = 0.02f / (parts)
 val strokeFactor : Float = 90f
 val sizeFactor : Float = 4.9f
 val delay : Long = 20
@@ -46,10 +46,10 @@ fun Canvas.drawLineArcDivider(scale : Float, w : Float, h : Float, paint : Paint
         restore()
     }
 
-    for (j in 0..(parts - 1)) {
-        val sc1j : Float = sc1.divideScale(j, parts)
-        val sc2j : Float = sc2.divideScale(j, parts)
-        val r : Float = j * gap
+    for (j in 0..(arcs - 1)) {
+        val sc1j : Float = sc1.divideScale(j, arcs)
+        val sc2j : Float = sc2.divideScale(j, arcs)
+        val r : Float = (j + 1) * gap
         save()
         drawArc(RectF(-r, -r, r, r), 270f - deg + 2 * deg * sc2j, 2 * deg * (sc1j - sc2j), false, paint)
         restore()
