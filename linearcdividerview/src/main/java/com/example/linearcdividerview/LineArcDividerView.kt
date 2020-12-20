@@ -25,6 +25,7 @@ val strokeFactor : Float = 90f
 val sizeFactor : Float = 4.9f
 val delay : Long = 20
 val deg : Float = 60f
+val backColor : Int = Color.parseColor("#BDBDBD")
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -190,6 +191,29 @@ class LineArcDividerView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : LineArcDividerView) {
+
+        private val animator : Animator = Animator(view)
+        private val lda : LineArcDivider = LineArcDivider(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            lda.draw(canvas, paint)
+            animator.animate {
+                lda.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lda.startUpdating {
+                animator.start()
+            }
         }
     }
 }
